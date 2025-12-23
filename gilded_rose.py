@@ -24,7 +24,7 @@ class GildedRose:
     Actualiza la calidad y días de venta de los items, según reglas específicas.
     """
 
-    def __init__(self, items):
+    def __init__(self, items: list[Item]) -> None:
         """
         Inicializa la lista de items para el sistema.
         Args:
