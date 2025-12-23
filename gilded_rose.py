@@ -1,0 +1,108 @@
+# -*- coding: utf-8 -*-
+
+# Constants
+MAX_QUALITY = 50
+MIN_QUALITY = 0
+AGED_BRIE = "Aged Brie"
+BACKSTAGE_PASSES = "Backstage passes to a TAFKAL80ETC concert"
+SULFURAS = "Sulfuras, Hand of Ragnaros"
+
+
+class Item:
+    def __init__(self, name, sell_in, quality):
+        self.name = name    
+        self.sell_in = sell_in
+        self.quality = quality
+
+    def __repr__(self):
+        return "%s, %s, %s" % (self.name, self.sell_in, self.quality)
+
+
+class GildedRose(object):
+    """
+    Sistema de gestion de inventario para la posada Gilded Rose.
+    Actualiza la calidad y días de venta de los items, según reglas específicas.
+    """
+
+    def __init__(self, items):
+        """
+        Inicializa la lista de items para el sistema.
+        Args:
+            items (list): Lista de items a gestionar.
+        """
+        self.items = items
+
+    @staticmethod
+    def _decrease_quality(item: Item) -> None:
+        item.quality = item.quality - 1
+
+    @staticmethod
+    def _increase_quality(item: Item) -> None:
+        item.quality = item.quality + 1
+
+    @staticmethod
+    def _decrease_sell_in(item: Item) -> None:
+        item.sell_in = item.sell_in - 1
+
+    def _update_backstage_passes(self, item: Item) -> None:
+        """
+        Actualiza el valor de los Backstage passes.
+        Args:
+            item (Item): Backstage pass a actualizar.
+        """
+        pass
+    
+    def update_quality(self) -> None:
+        """
+        Actualiza la calidad y días de venta de los items, según reglas específicas.
+
+        Reglas:
+        - Items normales: calidad disminuye en 1 por día
+        - Aged Brie: calidad aumenta con el tiempo
+        - Sulfuras: item legendario, no cambia
+        - Backstage passes: calidad aumenta, pero cae a 0 después del concierto
+        - La calidad nunca es negativa ni mayor a MAX_QUALITY
+        """
+        for item in self.items:
+            self._update_single_item(item)
+
+
+
+    def _update_single_item(self, item: Item) -> None:
+        """
+        Actualiza la calidad y días de venta de un item específico.
+        Args:
+            item (Item): Item a actualizar.
+        """
+        if item.name == AGED_BRIE or item.name == BACKSTAGE_PASSES:
+            if item.quality < MAX_QUALITY:
+                self._increase_quality(item)
+                if item.name == BACKSTAGE_PASSES:
+                    if item.sell_in < 11:
+                        if item.quality < MAX_QUALITY:
+                            self._increase_quality(item)
+                    if item.sell_in < 6:
+                        if item.quality < MAX_QUALITY:
+                            self._increase_quality(item)
+        else:
+            if item.quality > MIN_QUALITY:
+                if item.name != SULFURAS:
+                    self._decrease_quality(item)
+
+        if item.name != SULFURAS:
+            self._decrease_sell_in(item)
+
+        if item.sell_in < 0:
+            if item.name != AGED_BRIE:
+                if item.name != BACKSTAGE_PASSES:
+                    if item.quality > MIN_QUALITY:
+                        if item.name != SULFURAS:
+                            self._decrease_quality(item)
+                else:
+                    item.quality = item.quality - item.quality
+            else:
+                if item.quality < MAX_QUALITY:
+                    self._increase_quality(item)        
+
+
+
