@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 # Constants
 MAX_QUALITY = 50
 MIN_QUALITY = 0
@@ -9,16 +7,18 @@ SULFURAS = "Sulfuras, Hand of Ragnaros"
 
 
 class Item:
+    """DO NOT MODIFY - This class belongs to the goblin in the corner."""
+
     def __init__(self, name, sell_in, quality):
-        self.name = name    
+        self.name = name
         self.sell_in = sell_in
         self.quality = quality
 
     def __repr__(self):
-        return "%s, %s, %s" % (self.name, self.sell_in, self.quality)
+        return "%s, %s, %s" % (self.name, self.sell_in, self.quality)  # noqa: UP031
 
 
-class GildedRose(object):
+class GildedRose:
     """
     Sistema de gestion de inventario para la posada Gilded Rose.
     Actualiza la calidad y días de venta de los items, según reglas específicas.
@@ -51,7 +51,7 @@ class GildedRose(object):
             item (Item): Backstage pass a actualizar.
         """
         pass
-    
+
     def update_quality(self) -> None:
         """
         Actualiza la calidad y días de venta de los items, según reglas específicas.
@@ -65,8 +65,6 @@ class GildedRose(object):
         """
         for item in self.items:
             self._update_single_item(item)
-
-
 
     def _update_single_item(self, item: Item) -> None:
         """
@@ -86,8 +84,9 @@ class GildedRose(object):
                             self._increase_quality(item)
         else:
             if item.quality > MIN_QUALITY:
-                if item.name != SULFURAS:
-                    self._decrease_quality(item)
+                if item.name == SULFURAS:
+                    return
+                self._decrease_quality(item)
 
         if item.name != SULFURAS:
             self._decrease_sell_in(item)
@@ -102,7 +101,4 @@ class GildedRose(object):
                     item.quality = item.quality - item.quality
             else:
                 if item.quality < MAX_QUALITY:
-                    self._increase_quality(item)        
-
-
-
+                    self._increase_quality(item)

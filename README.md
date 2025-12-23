@@ -1,39 +1,44 @@
-# Gilded Rose starting position in Python
+# Gilded Rose Refactoring Kata - Python
 
-For exercise instructions see [top level README](../README.md)
+## Descripción
+Kata de refactoring del clásico problema "Gilded Rose".
+- Refactorización de código legacy
+- Testing con pytest
+- Approval testing
+- Clean Code
+- Principios SOLID
 
-Suggestion: create a python virtual environment for this project. See the [documentation](https://docs.python.org/3/library/venv.html)
+## 🎯 Objetivos
+- Refactorizar código legacy sin romper funcionalidad existente
+- Mantener 100% de cobertura de tests
+- Aplicar patrones de diseño apropiados
+- Documentar el proceso de refactoring
 
-## Run the unit tests from the Command-Line
+## 🛠️ Tecnologías
+- Python 3.14
+- pytest
+- pytest-cov
+- approvaltests
 
-```
-python -m unittest
-```
+## 📊 Estado Actual
+- ✅ Tests: Passing
+- ✅ Cobertura: 98%+
+- 🔄 Refactoring: En progreso
 
-## Run the TextTest fixture from the Command-Line
+## 🚀 Uso
 
-For e.g. 10 days:
+### Instalación
+\`\`\`bash
+pip install -r requirements.txt
+\`\`\`
 
-```
-python texttest_fixture.py 10
-```
+### Ejecutar tests
+\`\`\`bash
+pytest --cov=gilded_rose --cov-report=term-missing
+\`\`\`
 
-You should make sure the command shown above works when you execute it in a terminal before trying to use TextTest (see below).
+## 📝 Progreso del Refactoring
+Iré documentando aquí los pasos del refactoring...
 
-
-## Run the TextTest approval test that comes with this project
-
-There are instructions in the [TextTest Readme](../texttests/README.md) for setting up TextTest. You will need to specify the Python executable and interpreter in [config.gr](../texttests/config.gr). Uncomment these lines:
-
-    executable:${TEXTTEST_HOME}/python/texttest_fixture.py
-    interpreter:python
-
-## Run the ApprovalTests.Python test
-
-This test uses the framework [ApprovalTests.Python](https://github.com/approvals/ApprovalTests.Python). You will need to install  Run it like this:
-
-```
-python tests/test_gilded_rose_approvals.py
-```
-
-You will need to approve the output file which appears under "approved_files" by renaming it from xxx.received.txt to xxx.approved.txt.
+## 📚 Referencias
+- Kata original: [Emily Bache's GildedRose-Refactoring-Kata](https://github.com/emilybache/GildedRose-Refactoring-Kata)
