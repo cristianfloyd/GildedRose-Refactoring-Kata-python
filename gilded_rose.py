@@ -93,11 +93,11 @@ class GildedRose:
             item (Item): Item a actualizar.
         """
         match item.name:
-            case name if name == SULFURAS:
+            case _ if item.name == SULFURAS:
                 return
-            case name if name == AGED_BRIE:
+            case _ if item.name == AGED_BRIE:
                 self._update_aged_brie(item)
-            case name if name == BACKSTAGE_PASSES:
+            case _ if item.name == BACKSTAGE_PASSES:
                 self._update_backstage_passes(item)
             case _:
                 self._update_normal_items(item)
