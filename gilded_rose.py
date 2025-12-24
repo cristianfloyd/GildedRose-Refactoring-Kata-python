@@ -87,15 +87,18 @@ class GildedRose:
             case name if name == AGED_BRIE:
                 self._update_aged_brie(item)
             case name if name == BACKSTAGE_PASSES:
-                self._handle_update_backstage_passes(item)
-                self._decrease_sell_in(item)
-                if item.sell_in < 0:
-                    item.quality = 0
+                self._update_backstage_passes(item)
             case _:
                 self._decrease_quality_safe(item)
                 self._decrease_sell_in(item)
                 if item.sell_in < 0:
                     self._decrease_quality_safe(item)
+
+    def _update_backstage_passes(self, item: Item):
+        self._handle_update_backstage_passes(item)
+        self._decrease_sell_in(item)
+        if item.sell_in < 0:
+            item.quality = 0
 
     def _update_aged_brie(self, item: Item):
         self._increase_quality_safe(item)
