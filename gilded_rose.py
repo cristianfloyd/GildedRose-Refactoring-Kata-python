@@ -4,6 +4,8 @@ MIN_QUALITY = 0
 AGED_BRIE = "Aged Brie"
 BACKSTAGE_PASSES = "Backstage passes to a TAFKAL80ETC concert"
 SULFURAS = "Sulfuras, Hand of Ragnaros"
+BACKSTAGE_FIRST_THRESHOLD = 11
+BACKSTAGE_SECOND_THRESHOLD = 6
 
 
 class Item:
@@ -106,12 +108,20 @@ class GildedRose:
 
     def _handle_update_backstage_passes(self, item: Item) -> None:
         """
-        Increases quality based on remaining sell in
+        Aumenta la calidad según los días restantes para el concierto.
+        - Más de 10 días: +1 de calidad
+        - 10-6 días: +2 de calidad
+        - 5 o menos días: +3 de calidad
         Args:
             item (Item): Backstage pass a actualizar.
         """
-        self._increase_quality_safe(item)
-        if item.sell_in < 11:
-            self._increase_quality_safe(item)
-        if item.sell_in < 6:
-            self._increase_quality_safe(item)
+
+        if item.sell_in < BACKSTAGE_SECOND_THRESHOLD:
+            increment = 3
+        elif item.sell_in < BACKSTAGE_FIRST_THRESHOLD:
+            increment = 2
+        else:
+            increment = 1
+
+        # aplicar el incremento de calidad respetando el límite maximo de 50
+        item.quality = min(MAX_QUALITY, item.quality + increment)
