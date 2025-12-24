@@ -4,6 +4,9 @@ from item import Item
 
 MAX_QUALITY = 50
 MIN_QUALITY = 0
+MIN_SELL_IN = 0
+
+# Item names
 AGED_BRIE = "Aged Brie"
 BACKSTAGE_PASSES = "Backstage passes to a TAFKAL80ETC concert"
 SULFURAS = "Sulfuras, Hand of Ragnaros"
@@ -19,7 +22,6 @@ BACKSTAGE_FAR_INCREMENT = 1  # > 10 días
 BACKSTAGE_MEDIUM_INCREMENT = 2  # 6-10 días
 BACKSTAGE_NEAR_INCREMENT = 3  # 1-5 días
 BACKSTAGE_EXPIRED_QUALITY = 0  # después del concierto
-MIN_SELL_IN = 0
 
 # Normal items
 NORMAL_DAILY_DECREMENT = 1
@@ -99,12 +101,22 @@ class GildedRose:
                 self._update_normal_items(item)
 
     def _update_normal_items(self, item: Item) -> None:
+        """
+        Actualiza items normales.
+        - Disminuye la calidad en NORMAL_DAILY_DECREMENT por día
+        - Disminuye la calidad en NORMAL_EXPIRED_DECREMENT adicional si el sell_in es menor a 0
+        """
         self._decrease_quality_safe(item, NORMAL_DAILY_DECREMENT)
         self._decrease_sell_in(item)
         if item.sell_in < MIN_SELL_IN:
             self._decrease_quality_safe(item, NORMAL_EXPIRED_DECREMENT)
 
     def _update_backstage_passes(self, item: Item) -> None:
+        """
+        Actualiza Backstage passes.
+        - Aumenta la calidad según los días restantes para el concierto
+        - Disminuye la calidad a 0 si el sell_in es menor a 0
+        """
         self._increase_backstage_passes(item)
         self._decrease_sell_in(item)
         if item.sell_in < MIN_SELL_IN:
@@ -113,8 +125,8 @@ class GildedRose:
     def _update_aged_brie(self, item: Item) -> None:
         """
         Actualiza Aged Brie que mejora con el tiempo.
-        - Aumenta +1 por día
-        - Aumenta +2 después de la fecha de venta
+        - Aumenta la calidad en Aged_BRIE_INCREMENT por día
+        - Aumenta la calidad en Aged_BRIE_EXPIRED_INCREMENT después de la fecha de venta
         """
         self._increase_quality_safe(item, AGED_BRIE_INCREMENT)
         self._decrease_sell_in(item)
@@ -124,9 +136,10 @@ class GildedRose:
     def _increase_backstage_passes(self, item: Item) -> None:
         """
         Aumenta la calidad según los días restantes para el concierto.
-        - Más de 10 días: +1 de calidad
-        - 10-6 días: +2 de calidad
-        - 5 o menos días: +3 de calidad
+        - Más de BACKSTAGE_FIRST_THRESHOLD días: +BACKSTAGE_FAR_INCREMENT de calidad
+        - Entre BACKSTAGE_FIRST_THRESHOLD y BACKSTAGE_SECOND_THRESHOLD días:
+          +BACKSTAGE_MEDIUM_INCREMENT de calidad
+        - BACKSTAGE_SECOND_THRESHOLD o menos días: +BACKSTAGE_NEAR_INCREMENT de calidad
         Args:
             item (Item): Backstage pass a actualizar.
         """
