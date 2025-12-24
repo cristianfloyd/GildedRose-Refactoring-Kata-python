@@ -6,6 +6,7 @@ BACKSTAGE_PASSES = "Backstage passes to a TAFKAL80ETC concert"
 SULFURAS = "Sulfuras, Hand of Ragnaros"
 BACKSTAGE_FIRST_THRESHOLD = 11
 BACKSTAGE_SECOND_THRESHOLD = 6
+MIN_SELL_IN = 0
 
 
 class Item:
@@ -96,13 +97,13 @@ class GildedRose:
     def _update_normal_items(self, item: Item) -> None:
         self._decrease_quality_safe(item)
         self._decrease_sell_in(item)
-        if item.sell_in < 0:
+        if item.sell_in < MIN_SELL_IN:
             self._decrease_quality_safe(item)
 
     def _update_backstage_passes(self, item: Item) -> None:
         self._increase_backstage_passes(item)
         self._decrease_sell_in(item)
-        if item.sell_in < 0:
+        if item.sell_in < MIN_SELL_IN:
             item.quality = 0
 
     def _update_aged_brie(self, item: Item) -> None:
@@ -113,7 +114,7 @@ class GildedRose:
         """
         self._increase_quality_safe(item)
         self._decrease_sell_in(item)
-        if item.sell_in < 0:
+        if item.sell_in < MIN_SELL_IN:
             self._increase_quality_safe(item)
 
     def _increase_backstage_passes(self, item: Item) -> None:
