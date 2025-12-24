@@ -32,16 +32,16 @@ NORMAL_EXPIRED_DECREMENT = 1
 
 
 class GildedRose:
-    """
-    Sistema de gestion de inventario para la posada Gilded Rose.
+    """Sistema de gestion de inventario para la posada Gilded Rose.
     Actualiza la calidad y días de venta de los items, según reglas específicas.
     """
 
     def __init__(self, items: list[Item]) -> None:
-        """
-        Inicializa la lista de items para el sistema.
+        """Inicializa la lista de items para el sistema.
+
         Args:
             items (list): Lista de items a gestionar.
+
         """
         if not items:
             raise ValueError("Los items no pueden ser vacíos")
@@ -51,34 +51,36 @@ class GildedRose:
 
     @staticmethod
     def _decrease_quality_safe(item: Item, amount: int) -> None:
-        """
-        Disminuye la calidad de un item si no es el minimo.
+        """Disminuye la calidad de un item si no es el minimo.
+
         Args:
             item (Item): Item a disminuir.
+
         """
         item.quality = max(MIN_QUALITY, item.quality - amount)
 
     @staticmethod
     def _increase_quality_safe(item: Item, amount: int) -> None:
-        """
-        Aumenta la calidad de un item si no es el maximo.
+        """Aumenta la calidad de un item si no es el maximo.
+
         Args:
             item (Item): Item a aumentar.
+
         """
         item.quality = min(MAX_QUALITY, item.quality + amount)
 
     @staticmethod
     def _decrease_sell_in(item: Item) -> None:
-        """
-        Disminuye los días restantes para vender un item.
+        """Disminuye los días restantes para vender un item.
+
         Args:
             item (Item): Item a disminuir.
+
         """
         item.sell_in -= NORMAL_SELL_IN_DECREMENT
 
     def update_quality(self) -> None:
-        """
-        Actualiza la calidad y días de venta de los items, según reglas específicas.
+        """Actualiza la calidad y días de venta de los items, según reglas específicas.
 
         Reglas:
         - Items normales: calidad disminuye en 1 por día
@@ -91,10 +93,11 @@ class GildedRose:
             self._update_single_item(item)
 
     def _update_single_item(self, item: Item) -> None:
-        """
-        Actualiza la calidad y días de venta de un item específico.
+        """Actualiza la calidad y días de venta de un item específico.
+
         Args:
             item (Item): Item a actualizar.
+
         """
         match item.name:
             case _ if item.name == SULFURAS:
@@ -113,14 +116,15 @@ class GildedRose:
         daily_change: int,
         expired_change: int,
     ) -> None:
-        """
-        Aplica el patrón común de envejecimiento:
-         ajuste diario -> envejecer -> ajuste por vencimiento.
+        """Aplica el patrón común de envejecimiento:
+        - Ajuste diario -> Envejecer -> Ajuste por vencimiento.
+
         Args:
             item (Item): Item a actualizar.
             adjustment_method (Callable): Método para ajustar calidad (incrementar o disminuir).
             daily_change (int): Cantidad a ajustar diariamente.
             expired_change (int): Cantidad extra a ajustar si expiró.
+
         """
         adjustment_method(item, daily_change)
         self._decrease_sell_in(item)
@@ -128,18 +132,19 @@ class GildedRose:
             adjustment_method(item, expired_change)
 
     def _update_normal_items(self, item: Item) -> None:
-        """
-        Actualiza items normales.
+        """Actualiza items normales.
         - Disminuye la calidad en NORMAL_DAILY_DECREMENT por día
         - Disminuye la calidad en NORMAL_EXPIRED_DECREMENT adicional si el sell_in es menor a 0
         """
         self._apply_standard_aging(
-            item, self._decrease_quality_safe, NORMAL_DAILY_DECREMENT, NORMAL_EXPIRED_DECREMENT
+            item,
+            self._decrease_quality_safe,
+            NORMAL_DAILY_DECREMENT,
+            NORMAL_EXPIRED_DECREMENT,
         )
 
     def _update_backstage_passes(self, item: Item) -> None:
-        """
-        Actualiza Backstage passes.
+        """Actualiza Backstage passes.
         - Aumenta la calidad según los días restantes para el concierto
         - Disminuye la calidad a 0 si el sell_in es menor a 0
         """
@@ -149,26 +154,28 @@ class GildedRose:
             item.quality = BACKSTAGE_EXPIRED_QUALITY
 
     def _update_aged_brie(self, item: Item) -> None:
-        """
-        Actualiza Aged Brie que mejora con el tiempo.
+        """Actualiza Aged Brie que mejora con el tiempo.
         - Aumenta la calidad en Aged_BRIE_INCREMENT por día
         - Aumenta la calidad en Aged_BRIE_EXPIRED_INCREMENT después de la fecha de venta
+
         """
         self._apply_standard_aging(
-            item, self._increase_quality_safe, AGED_BRIE_INCREMENT, AGED_BRIE_EXPIRED_INCREMENT
+            item,
+            self._increase_quality_safe,
+            AGED_BRIE_INCREMENT,
+            AGED_BRIE_EXPIRED_INCREMENT,
         )
 
     def _increase_backstage_passes(self, item: Item) -> None:
-        """
-        Aumenta la calidad según los días restantes para el concierto.
+        """Aumenta la calidad según los días restantes para el concierto.
         - Más de BACKSTAGE_FIRST_THRESHOLD días: +BACKSTAGE_FAR_INCREMENT de calidad
         - Entre BACKSTAGE_FIRST_THRESHOLD y BACKSTAGE_SECOND_THRESHOLD días:
           +BACKSTAGE_MEDIUM_INCREMENT de calidad
         - BACKSTAGE_SECOND_THRESHOLD o menos días: +BACKSTAGE_NEAR_INCREMENT de calidad
         Args:
             item (Item): Backstage pass a actualizar.
-        """
 
+        """
         if item.sell_in < BACKSTAGE_SECOND_THRESHOLD:
             increment = BACKSTAGE_NEAR_INCREMENT
         elif item.sell_in < BACKSTAGE_FIRST_THRESHOLD:
