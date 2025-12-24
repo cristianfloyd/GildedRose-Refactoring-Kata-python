@@ -4,9 +4,24 @@ MIN_QUALITY = 0
 AGED_BRIE = "Aged Brie"
 BACKSTAGE_PASSES = "Backstage passes to a TAFKAL80ETC concert"
 SULFURAS = "Sulfuras, Hand of Ragnaros"
+
+# Aged Brie
+AGED_BRIE_INCREMENT = 1
+AGED_BRIE_EXPIRED_INCREMENT = 1
+
+# Backstage passes
 BACKSTAGE_FIRST_THRESHOLD = 11
 BACKSTAGE_SECOND_THRESHOLD = 6
+BACKSTAGE_FAR_INCREMENT = 1  # > 10 días
+BACKSTAGE_MEDIUM_INCREMENT = 2  # 6-10 días
+BACKSTAGE_NEAR_INCREMENT = 3  # 1-5 días
+BACKSTAGE_EXPIRED_QUALITY = 0  # después del concierto
 MIN_SELL_IN = 0
+
+# Normal items
+NORMAL_DAILY_DECREMENT = 1
+NORMAL_DAILY_INCREMENT = 1
+NORMAL_EXPIRED_DECREMENT = 2
 
 
 class Item:
@@ -36,7 +51,7 @@ class GildedRose:
         self.items = items
 
     @staticmethod
-    def _decrease_quality_safe(item: Item, amount: int = 1) -> None:
+    def _decrease_quality_safe(item: Item, amount: int = NORMAL_DAILY_DECREMENT) -> None:
         """
         Disminuye la calidad de un item si no es el minimo.
         Args:
@@ -45,7 +60,7 @@ class GildedRose:
         item.quality = max(MIN_QUALITY, item.quality - amount)
 
     @staticmethod
-    def _increase_quality_safe(item: Item, amount: int = 1) -> None:
+    def _increase_quality_safe(item: Item, amount: int = NORMAL_DAILY_INCREMENT) -> None:
         """
         Aumenta la calidad de un item si no es el maximo.
         Args:
@@ -60,7 +75,7 @@ class GildedRose:
         Args:
             item (Item): Item a disminuir.
         """
-        item.sell_in = item.sell_in - 1
+        item.sell_in -= NORMAL_DAILY_DECREMENT
 
     def update_quality(self) -> None:
         """
@@ -102,7 +117,7 @@ class GildedRose:
         self._increase_backstage_passes(item)
         self._decrease_sell_in(item)
         if item.sell_in < MIN_SELL_IN:
-            item.quality = 0
+            item.quality = BACKSTAGE_EXPIRED_QUALITY
 
     def _update_aged_brie(self, item: Item) -> None:
         """
@@ -126,11 +141,11 @@ class GildedRose:
         """
 
         if item.sell_in < BACKSTAGE_SECOND_THRESHOLD:
-            increment = 3
+            increment = BACKSTAGE_NEAR_INCREMENT
         elif item.sell_in < BACKSTAGE_FIRST_THRESHOLD:
-            increment = 2
+            increment = BACKSTAGE_MEDIUM_INCREMENT
         else:
-            increment = 1
+            increment = BACKSTAGE_FAR_INCREMENT
 
         # aplicar el incremento de calidad respetando el límite maximo de 50
         self._increase_quality_safe(item, increment)
