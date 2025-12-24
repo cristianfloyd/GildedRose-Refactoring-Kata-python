@@ -56,29 +56,6 @@ class GildedRose:
     def _decrease_sell_in(item: Item) -> None:
         item.sell_in = item.sell_in - 1
 
-    def _update_backstage_passes(self, item: Item) -> None:
-        """
-        Actualiza el valor de los Backstage passes.
-        Args:
-            item (Item): Backstage pass a actualizar.
-        """
-        pass
-
-    def _update_aged_brie(self, item: Item) -> None:
-        """
-        Actualiza el valor de Aged Brie.
-        # - Quality MAX = 50
-        Args:
-            item (Item): Aged Brie a actualizar.
-        """
-
-        # - AUMENTA quality (+1 por día)
-        self._increase_quality_safe(item)
-
-        # - Si sell_in < 0: AUMENTA más (+1 adicional)
-        if item.sell_in < 0:
-            self._increase_quality_safe(item)
-
     def update_quality(self) -> None:
         """
         Actualiza la calidad y días de venta de los items, según reglas específicas.
@@ -100,21 +77,31 @@ class GildedRose:
             item (Item): Item a actualizar.
         """
         # Sulfuras no cambia - Guard clause
-        if item.name == SULFURAS:
-            return
+        # if item.name == SULFURAS:
+        #   return
 
         # Aged Brie y Backstage passes tienen reglas especiales
         match item.name:
+            case name if name == SULFURAS:
+                return
             case name if name == AGED_BRIE:
-                self._increase_quality_safe(item)
+                self._update_aged_brie(item)
             case name if name == BACKSTAGE_PASSES:
-                # Increases quality based on remaining sell in
                 self._handle_update_backstage_passes(item)
+                self._decrease_sell_in(item)
+                if item.sell_in < 0:
+                    item.quality = 0
             case _:
                 self._decrease_quality_safe(item)
+                self._decrease_sell_in(item)
+                if item.sell_in < 0:
+                    self._decrease_quality_safe(item)
 
-        self._decrease_sell_in(item)  # ya no necesita el if != SULFURAS
-        self._update_item_after_sell_date(item)
+    def _update_aged_brie(self, item: Item):
+        self._increase_quality_safe(item)
+        self._decrease_sell_in(item)
+        if item.sell_in < 0:
+            self._increase_quality_safe(item)
 
     def _handle_update_backstage_passes(self, item: Item) -> None:
         """
@@ -127,14 +114,3 @@ class GildedRose:
             self._increase_quality_safe(item)
         if item.sell_in < 6:
             self._increase_quality_safe(item)
-
-    def _update_item_after_sell_date(self, item: Item) -> None:
-        if item.sell_in < 0:
-            # Adjusts quality based on item type after sell date
-            match item.name:
-                case name if name == AGED_BRIE:
-                    self._increase_quality_safe(item)
-                case name if name == BACKSTAGE_PASSES:
-                    item.quality = 0
-                case _:
-                    self._decrease_quality_safe(item)
