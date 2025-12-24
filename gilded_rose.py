@@ -76,11 +76,6 @@ class GildedRose:
         Args:
             item (Item): Item a actualizar.
         """
-        # Sulfuras no cambia - Guard clause
-        # if item.name == SULFURAS:
-        #   return
-
-        # Aged Brie y Backstage passes tienen reglas especiales
         match item.name:
             case name if name == SULFURAS:
                 return
@@ -89,10 +84,13 @@ class GildedRose:
             case name if name == BACKSTAGE_PASSES:
                 self._update_backstage_passes(item)
             case _:
-                self._decrease_quality_safe(item)
-                self._decrease_sell_in(item)
-                if item.sell_in < 0:
-                    self._decrease_quality_safe(item)
+                self._update_normal_items(item)
+
+    def _update_normal_items(self, item: Item):
+        self._decrease_quality_safe(item)
+        self._decrease_sell_in(item)
+        if item.sell_in < 0:
+            self._decrease_quality_safe(item)
 
     def _update_backstage_passes(self, item: Item):
         self._handle_update_backstage_passes(item)
