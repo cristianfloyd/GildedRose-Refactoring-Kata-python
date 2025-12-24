@@ -43,6 +43,10 @@ class GildedRose:
         Args:
             items (list): Lista de items a gestionar.
         """
+        if not items:
+            raise ValueError("Los items no pueden ser vacíos")
+        if not all(isinstance(item, Item) for item in items):
+            raise ValueError("Los items deben ser instancias de Item")
         self.items = items
 
     @staticmethod
