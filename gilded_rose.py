@@ -52,6 +52,23 @@ class GildedRose:
         """
         pass
 
+    def _update_aged_brie(self, item: Item) -> None:
+        """
+        Actualiza el valor de Aged Brie.
+        # - Quality MAX = 50
+        Args:
+            item (Item): Aged Brie a actualizar.
+        """
+
+        # - AUMENTA quality (+1 por día)
+        if item.quality < MAX_QUALITY:
+            self._increase_quality(item)
+
+        # - Si sell_in < 0: AUMENTA más (+1 adicional)
+        if item.sell_in < 0:
+            if item.quality < MAX_QUALITY:
+                self._increase_quality(item)
+
     def update_quality(self) -> None:
         """
         Actualiza la calidad y días de venta de los items, según reglas específicas.
@@ -76,16 +93,22 @@ class GildedRose:
         if item.name == SULFURAS:
             return
 
-        if item.name == AGED_BRIE or item.name == BACKSTAGE_PASSES:
+        # Guard clause: Aged Brie tiene logica especial
+
+        # Aged Brie y Backstage passes tienen reglas especiales
+        if item.name == AGED_BRIE:
             if item.quality < MAX_QUALITY:
                 self._increase_quality(item)
-                if item.name == BACKSTAGE_PASSES:
-                    if item.sell_in < 11:
-                        if item.quality < MAX_QUALITY:
-                            self._increase_quality(item)
-                    if item.sell_in < 6:
-                        if item.quality < MAX_QUALITY:
-                            self._increase_quality(item)
+        elif item.name == BACKSTAGE_PASSES:
+            # Increases quality based on remaining sell in
+            if item.quality < MAX_QUALITY:
+                self._increase_quality(item)
+                if item.sell_in < 11:
+                    if item.quality < MAX_QUALITY:
+                        self._increase_quality(item)
+                if item.sell_in < 6:
+                    if item.quality < MAX_QUALITY:
+                        self._increase_quality(item)
         else:
             if item.quality > MIN_QUALITY:
                 self._decrease_quality(item)
@@ -93,12 +116,12 @@ class GildedRose:
         self._decrease_sell_in(item)  # ya no necesita el if != SULFURAS
 
         if item.sell_in < 0:
+            # Adjusts quality based on item type after sell date
             if item.name == AGED_BRIE:
                 if item.quality < MAX_QUALITY:
                     self._increase_quality(item)
+            elif item.name == BACKSTAGE_PASSES:
+                item.quality = item.quality - item.quality
             else:
-                if item.name == BACKSTAGE_PASSES:
-                    item.quality = item.quality - item.quality
-                else:
-                    if item.quality > MIN_QUALITY:
-                        self._decrease_quality(item)
+                if item.quality > MIN_QUALITY:
+                    self._decrease_quality(item)
