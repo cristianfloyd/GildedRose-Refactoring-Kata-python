@@ -56,6 +56,11 @@ class GildedRose:
 
     @staticmethod
     def _decrease_sell_in(item: Item) -> None:
+        """
+        Disminuye los días restantes para vender un item.
+        Args:
+            item (Item): Item a disminuir.
+        """
         item.sell_in = item.sell_in - 1
 
     def update_quality(self) -> None:
@@ -88,25 +93,30 @@ class GildedRose:
             case _:
                 self._update_normal_items(item)
 
-    def _update_normal_items(self, item: Item):
+    def _update_normal_items(self, item: Item) -> None:
         self._decrease_quality_safe(item)
         self._decrease_sell_in(item)
         if item.sell_in < 0:
             self._decrease_quality_safe(item)
 
-    def _update_backstage_passes(self, item: Item):
-        self._handle_update_backstage_passes(item)
+    def _update_backstage_passes(self, item: Item) -> None:
+        self._increase_backstage_passes(item)
         self._decrease_sell_in(item)
         if item.sell_in < 0:
             item.quality = 0
 
-    def _update_aged_brie(self, item: Item):
+    def _update_aged_brie(self, item: Item) -> None:
+        """
+        Actualiza Aged Brie que mejora con el tiempo.
+        - Aumenta +1 por día
+        - Aumenta +2 después de la fecha de venta
+        """
         self._increase_quality_safe(item)
         self._decrease_sell_in(item)
         if item.sell_in < 0:
             self._increase_quality_safe(item)
 
-    def _handle_update_backstage_passes(self, item: Item) -> None:
+    def _increase_backstage_passes(self, item: Item) -> None:
         """
         Aumenta la calidad según los días restantes para el concierto.
         - Más de 10 días: +1 de calidad
