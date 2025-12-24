@@ -46,7 +46,7 @@ class GildedRose:
         if not items:
             raise ValueError("Los items no pueden ser vacíos")
         if not all(isinstance(item, Item) for item in items):
-            raise ValueError("Los items deben ser instancias de Item")
+            raise TypeError("Los items deben ser instancias de Item")
         self.items = items
 
     @staticmethod
