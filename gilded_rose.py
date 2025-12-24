@@ -72,7 +72,7 @@ class GildedRose:
         Args:
             item (Item): Item a actualizar.
         """
-
+        # Sulfuras no cambia - Guard clause
         if item.name == SULFURAS:
             return
 
@@ -90,7 +90,7 @@ class GildedRose:
             if item.quality > MIN_QUALITY:
                 self._decrease_quality(item)
 
-        self._decrease_sell_in(item)
+        self._decrease_sell_in(item)  # ya no necesita el if != SULFURAS
 
         if item.sell_in < 0:
             if item.name != AGED_BRIE:
