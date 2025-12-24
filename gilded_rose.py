@@ -72,6 +72,10 @@ class GildedRose:
         Args:
             item (Item): Item a actualizar.
         """
+
+        if item.name == SULFURAS:
+            return
+
         if item.name == AGED_BRIE or item.name == BACKSTAGE_PASSES:
             if item.quality < MAX_QUALITY:
                 self._increase_quality(item)
@@ -84,19 +88,15 @@ class GildedRose:
                             self._increase_quality(item)
         else:
             if item.quality > MIN_QUALITY:
-                if item.name == SULFURAS:
-                    return
                 self._decrease_quality(item)
 
-        if item.name != SULFURAS:
-            self._decrease_sell_in(item)
+        self._decrease_sell_in(item)
 
         if item.sell_in < 0:
             if item.name != AGED_BRIE:
                 if item.name != BACKSTAGE_PASSES:
                     if item.quality > MIN_QUALITY:
-                        if item.name != SULFURAS:
-                            self._decrease_quality(item)
+                        self._decrease_quality(item)
                 else:
                     item.quality = item.quality - item.quality
             else:
