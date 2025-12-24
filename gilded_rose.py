@@ -36,24 +36,22 @@ class GildedRose:
         self.items = items
 
     @staticmethod
-    def _decrease_quality_safe(item: Item) -> None:
+    def _decrease_quality_safe(item: Item, amount: int = 1) -> None:
         """
         Disminuye la calidad de un item si no es el minimo.
         Args:
             item (Item): Item a disminuir.
         """
-        if item.quality > MIN_QUALITY:
-            item.quality = item.quality - 1
+        item.quality = max(MIN_QUALITY, item.quality - amount)
 
     @staticmethod
-    def _increase_quality_safe(item: Item) -> None:
+    def _increase_quality_safe(item: Item, amount: int = 1) -> None:
         """
         Aumenta la calidad de un item si no es el maximo.
         Args:
             item (Item): Item a aumentar.
         """
-        if item.quality < MAX_QUALITY:
-            item.quality = item.quality + 1
+        item.quality = min(MAX_QUALITY, item.quality + amount)
 
     @staticmethod
     def _decrease_sell_in(item: Item) -> None:
@@ -135,4 +133,4 @@ class GildedRose:
             increment = 1
 
         # aplicar el incremento de calidad respetando el límite maximo de 50
-        item.quality = min(MAX_QUALITY, item.quality + increment)
+        self._increase_quality_safe(item, increment)
