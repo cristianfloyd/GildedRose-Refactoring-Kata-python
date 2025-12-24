@@ -33,12 +33,24 @@ class GildedRose:
         self.items = items
 
     @staticmethod
-    def _decrease_quality(item: Item) -> None:
-        item.quality = item.quality - 1
+    def _decrease_quality_safe(item: Item) -> None:
+        """
+        Disminuye la calidad de un item si no es el minimo.
+        Args:
+            item (Item): Item a disminuir.
+        """
+        if item.quality > MIN_QUALITY:
+            item.quality = item.quality - 1
 
     @staticmethod
-    def _increase_quality(item: Item) -> None:
-        item.quality = item.quality + 1
+    def _increase_quality_safe(item: Item) -> None:
+        """
+        Aumenta la calidad de un item si no es el maximo.
+        Args:
+            item (Item): Item a aumentar.
+        """
+        if item.quality < MAX_QUALITY:
+            item.quality = item.quality + 1
 
     @staticmethod
     def _decrease_sell_in(item: Item) -> None:
@@ -61,13 +73,11 @@ class GildedRose:
         """
 
         # - AUMENTA quality (+1 por día)
-        if item.quality < MAX_QUALITY:
-            self._increase_quality(item)
+        self._increase_quality_safe(item)
 
         # - Si sell_in < 0: AUMENTA más (+1 adicional)
         if item.sell_in < 0:
-            if item.quality < MAX_QUALITY:
-                self._increase_quality(item)
+            self._increase_quality_safe(item)
 
     def update_quality(self) -> None:
         """
@@ -93,35 +103,38 @@ class GildedRose:
         if item.name == SULFURAS:
             return
 
-        # Guard clause: Aged Brie tiene logica especial
-
         # Aged Brie y Backstage passes tienen reglas especiales
-        if item.name == AGED_BRIE:
-            if item.quality < MAX_QUALITY:
-                self._increase_quality(item)
-        elif item.name == BACKSTAGE_PASSES:
-            # Increases quality based on remaining sell in
-            if item.quality < MAX_QUALITY:
-                self._increase_quality(item)
-                if item.sell_in < 11:
-                    if item.quality < MAX_QUALITY:
-                        self._increase_quality(item)
-                if item.sell_in < 6:
-                    if item.quality < MAX_QUALITY:
-                        self._increase_quality(item)
-        else:
-            if item.quality > MIN_QUALITY:
-                self._decrease_quality(item)
+        match item.name:
+            case name if name == AGED_BRIE:
+                self._increase_quality_safe(item)
+            case name if name == BACKSTAGE_PASSES:
+                # Increases quality based on remaining sell in
+                self._handle_update_backstage_passes(item)
+            case _:
+                self._decrease_quality_safe(item)
 
         self._decrease_sell_in(item)  # ya no necesita el if != SULFURAS
+        self._update_item_after_sell_date(item)
 
+    def _handle_update_backstage_passes(self, item: Item) -> None:
+        """
+        Increases quality based on remaining sell in
+        Args:
+            item (Item): Backstage pass a actualizar.
+        """
+        self._increase_quality_safe(item)
+        if item.sell_in < 11:
+            self._increase_quality_safe(item)
+        if item.sell_in < 6:
+            self._increase_quality_safe(item)
+
+    def _update_item_after_sell_date(self, item: Item) -> None:
         if item.sell_in < 0:
             # Adjusts quality based on item type after sell date
-            if item.name == AGED_BRIE:
-                if item.quality < MAX_QUALITY:
-                    self._increase_quality(item)
-            elif item.name == BACKSTAGE_PASSES:
-                item.quality = item.quality - item.quality
-            else:
-                if item.quality > MIN_QUALITY:
-                    self._decrease_quality(item)
+            match item.name:
+                case name if name == AGED_BRIE:
+                    self._increase_quality_safe(item)
+                case name if name == BACKSTAGE_PASSES:
+                    item.quality = 0
+                case _:
+                    self._decrease_quality_safe(item)
