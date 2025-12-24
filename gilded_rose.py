@@ -1,4 +1,5 @@
 # Constants
+
 from item import Item
 
 MAX_QUALITY = 50
