@@ -24,7 +24,7 @@ MIN_SELL_IN = 0
 # Normal items
 NORMAL_DAILY_DECREMENT = 1
 NORMAL_DAILY_INCREMENT = 1
-NORMAL_EXPIRED_DECREMENT = 2
+NORMAL_EXPIRED_DECREMENT = 1
 
 
 class GildedRose:
@@ -42,7 +42,7 @@ class GildedRose:
         self.items = items
 
     @staticmethod
-    def _decrease_quality_safe(item: Item, amount: int = NORMAL_DAILY_DECREMENT) -> None:
+    def _decrease_quality_safe(item: Item, amount: int) -> None:
         """
         Disminuye la calidad de un item si no es el minimo.
         Args:
@@ -51,7 +51,7 @@ class GildedRose:
         item.quality = max(MIN_QUALITY, item.quality - amount)
 
     @staticmethod
-    def _increase_quality_safe(item: Item, amount: int = NORMAL_DAILY_INCREMENT) -> None:
+    def _increase_quality_safe(item: Item, amount: int) -> None:
         """
         Aumenta la calidad de un item si no es el maximo.
         Args:
@@ -99,10 +99,10 @@ class GildedRose:
                 self._update_normal_items(item)
 
     def _update_normal_items(self, item: Item) -> None:
-        self._decrease_quality_safe(item)
+        self._decrease_quality_safe(item, NORMAL_DAILY_DECREMENT)
         self._decrease_sell_in(item)
         if item.sell_in < MIN_SELL_IN:
-            self._decrease_quality_safe(item)
+            self._decrease_quality_safe(item, NORMAL_EXPIRED_DECREMENT)
 
     def _update_backstage_passes(self, item: Item) -> None:
         self._increase_backstage_passes(item)
@@ -116,10 +116,10 @@ class GildedRose:
         - Aumenta +1 por día
         - Aumenta +2 después de la fecha de venta
         """
-        self._increase_quality_safe(item)
+        self._increase_quality_safe(item, AGED_BRIE_INCREMENT)
         self._decrease_sell_in(item)
         if item.sell_in < MIN_SELL_IN:
-            self._increase_quality_safe(item)
+            self._increase_quality_safe(item, AGED_BRIE_EXPIRED_INCREMENT)
 
     def _increase_backstage_passes(self, item: Item) -> None:
         """
