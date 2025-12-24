@@ -63,3 +63,10 @@ exclude_lines = [
     "raise NotImplementedError",
     "if __name__ == .__main__.:",
 ]
+
+[tool.pyright]
+include = ["gilded_rose.py", "tests"]
+exclude = ["**/__pycache__", ".venv"]
+typeCheckingMode = "standard"
+reportMissingTypeStubs = false
+pythonVersion = "3.10"  # O
