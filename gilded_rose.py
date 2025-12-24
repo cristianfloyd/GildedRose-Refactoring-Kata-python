@@ -93,12 +93,12 @@ class GildedRose:
         self._decrease_sell_in(item)  # ya no necesita el if != SULFURAS
 
         if item.sell_in < 0:
-            if item.name != AGED_BRIE:
-                if item.name != BACKSTAGE_PASSES:
-                    if item.quality > MIN_QUALITY:
-                        self._decrease_quality(item)
-                else:
-                    item.quality = item.quality - item.quality
-            else:
+            if item.name == AGED_BRIE:
                 if item.quality < MAX_QUALITY:
                     self._increase_quality(item)
+            else:
+                if item.name == BACKSTAGE_PASSES:
+                    item.quality = item.quality - item.quality
+                else:
+                    if item.quality > MIN_QUALITY:
+                        self._decrease_quality(item)
