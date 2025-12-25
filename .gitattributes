@@ -1,0 +1,2 @@
+# Archivos de Approval Tests - preservar exactamente como están
+tests/approved_files/*.approved.txt -text -eol
