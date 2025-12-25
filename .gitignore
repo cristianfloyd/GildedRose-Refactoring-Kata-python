@@ -33,6 +33,8 @@ htmlcov/
 coverage.xml
 *.cover
 .hypothesis/
+# Approval Tests
+*.received.txt
 
 # IDEs
 .vscode/
