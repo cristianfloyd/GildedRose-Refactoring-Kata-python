@@ -1,5 +1,5 @@
 class TestConjuredItems:
-    """Test para items conjurados, degradan al dobre de velocidad"""
+    """Test para items conjurados, degradan al doble de velocidad"""
 
     def test_conjured_normal_day(self, update_quality):
         """Quality -2 en día normal."""

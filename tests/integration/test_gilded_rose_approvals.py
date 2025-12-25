@@ -4,7 +4,7 @@ import sys
 from approvaltests import verify
 from approvaltests.reporters.python_native_reporter import PythonNativeReporter
 
-from texttest_fixture import main
+from scripts.texttest_fixture import main
 
 
 def test_gilded_rose_approvals():

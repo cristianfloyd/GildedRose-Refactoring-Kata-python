@@ -1,4 +1,4 @@
-from gilded_rose import AGED_BRIE, BACKSTAGE_PASSES, SULFURAS
+from gilded_rose.constants import AGED_BRIE, BACKSTAGE_PASSES, SULFURAS
 
 
 class TestSulfuras:

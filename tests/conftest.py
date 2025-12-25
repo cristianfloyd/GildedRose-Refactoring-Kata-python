@@ -1,7 +1,6 @@
 import pytest
 
-from gilded_rose import GildedRose
-from item import Item
+from gilded_rose import GildedRose, Item
 
 # conftest.py
 

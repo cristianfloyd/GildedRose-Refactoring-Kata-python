@@ -64,7 +64,7 @@ addopts = [
 ]
 
 [tool.coverage.run]
-source = ["."]
+source = ["gilded_rose"]
 omit = [
     "tests/*",
     ".venv/*",

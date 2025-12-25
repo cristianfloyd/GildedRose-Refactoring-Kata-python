@@ -1,0 +1,33 @@
+"""Constantes del sistema Gilded Rose."""
+
+# Quality limits
+MAX_QUALITY = 50
+MIN_QUALITY = 0
+MIN_SELL_IN = 0
+
+# Item names
+AGED_BRIE = "Aged Brie"
+BACKSTAGE_PASSES = "Backstage passes to a TAFKAL80ETC concert"
+SULFURAS = "Sulfuras, Hand of Ragnaros"
+
+# Aged Brie increments
+AGED_BRIE_INCREMENT = 1
+AGED_BRIE_EXPIRED_INCREMENT = 1
+
+# Backstage increments
+BACKSTAGE_FIRST_THRESHOLD = 11
+BACKSTAGE_SECOND_THRESHOLD = 6
+BACKSTAGE_FAR_INCREMENT = 1  # > 10 días
+BACKSTAGE_MEDIUM_INCREMENT = 2  # 6-10 días
+BACKSTAGE_NEAR_INCREMENT = 3  # 1-5 días
+BACKSTAGE_EXPIRED_QUALITY = 0
+
+# Normal item decrements
+NORMAL_DAILY_DECREMENT = 1
+NORMAL_SELL_IN_DECREMENT = 1
+NORMAL_EXPIRED_DECREMENT = 1
+
+# Conjured items
+CONJURED_PREFIX = "conjured"
+CONJURED_DAILY_DECREMENT = 2
+CONJURED_EXPIRED_DECREMENT = 2
