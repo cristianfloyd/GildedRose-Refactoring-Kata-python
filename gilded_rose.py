@@ -31,7 +31,7 @@ NORMAL_SELL_IN_DECREMENT = 1
 NORMAL_EXPIRED_DECREMENT = 1
 
 # Conjured items
-CONJURED_PREFIX = "Conjured"
+CONJURED_PREFIX = "conjured"
 CONJURED_DAILY_DECREMENT = 2
 CONJURED_EXPIRED_DECREMENT = 2
 
@@ -101,7 +101,7 @@ class GildedRose:
             item (Item): Item a verificar.
 
         """
-        return item.name.startswith(CONJURED_PREFIX)
+        return item.name.lower().startswith(CONJURED_PREFIX)
 
     def update_quality(self) -> None:
         """Actualiza la calidad y días de venta de los items, según reglas específicas.
