@@ -25,7 +25,8 @@ def main():
         print("name, sellIn, quality")
         for item in items:
             print(item)
-        print("")
+        if day < days - 1:
+            print("")
         GildedRose(items).update_quality()
 
 
