@@ -43,11 +43,20 @@ class GildedRose:
             items (list): Lista de items a gestionar.
 
         """
+        self._validate_items(items)
+        self.items = items
+
+    def _validate_items(self, items: list[Item]) -> None:
+        """Valida que los items sean instancias de Item.
+
+        Args:
+            items (list): Lista de items a validar.
+
+        """
         if not items:
             raise ValueError("Los items no pueden ser vacíos")
         if not all(isinstance(item, Item) for item in items):
             raise TypeError("Los items deben ser instancias de Item")
-        self.items = items
 
     @staticmethod
     def _decrease_quality_safe(item: Item, amount: int) -> None:
