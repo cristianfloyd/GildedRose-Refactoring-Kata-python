@@ -20,3 +20,9 @@
 - DISMINUYE quality (-1 por día)
 - Si sell_in < 0: DISMINUYE doble (-1 adicional)
 - Quality MIN = 0
+
+# CASO 4: Conjured Items
+- DISMINUYE quality (-2 por dia)
+- Si sell_in < 0: DISMINUYE doble (-1 adicional)
+- Quality MIN = 0
+- Quality MAX = 50
