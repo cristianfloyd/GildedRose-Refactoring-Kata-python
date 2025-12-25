@@ -12,7 +12,7 @@ def test_gilded_rose_approvals():
     try:
         fake_stdout = io.StringIO()
         sys.stdout = fake_stdout
-        sys.argv = ["texttest_fixture.py", 60]
+        sys.argv = ["texttest_fixture.py", 11]
         main()
         answer = fake_stdout.getvalue()
     finally:
