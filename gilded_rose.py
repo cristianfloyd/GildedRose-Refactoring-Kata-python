@@ -30,6 +30,11 @@ NORMAL_DAILY_DECREMENT = 1
 NORMAL_SELL_IN_DECREMENT = 1
 NORMAL_EXPIRED_DECREMENT = 1
 
+# Conjured items
+CONJURED_PREFIX = "Conjured"
+CONJURED_DAILY_DECREMENT = 2
+CONJURED_EXPIRED_DECREMENT = 2
+
 
 class GildedRose:
     """Sistema de gestion de inventario para la posada Gilded Rose.
@@ -88,6 +93,16 @@ class GildedRose:
         """
         item.sell_in -= NORMAL_SELL_IN_DECREMENT
 
+    @staticmethod
+    def _is_conjured(item: Item) -> bool:
+        """Verifica si un item es conjurado por su nombre.
+
+        Args:
+            item (Item): Item a verificar.
+
+        """
+        return item.name.startswith(CONJURED_PREFIX)
+
     def update_quality(self) -> None:
         """Actualiza la calidad y días de venta de los items, según reglas específicas.
 
@@ -115,6 +130,8 @@ class GildedRose:
                 self._update_aged_brie(item)
             case _ if item.name == BACKSTAGE_PASSES:
                 self._update_backstage_passes(item)
+            case _ if self._is_conjured(item):
+                self._update_conjured_items(item)
             case _:
                 self._update_normal_items(item)
 
@@ -173,6 +190,18 @@ class GildedRose:
             self._increase_quality_safe,
             AGED_BRIE_INCREMENT,
             AGED_BRIE_EXPIRED_INCREMENT,
+        )
+
+    def _update_conjured_items(self, item: Item) -> None:
+        """Actualiza items conjurados.
+        - Disminuye la calidad en CONJURED_DAILY_DECREMENT por día
+        - Disminuye la calidad en CONJURED_EXPIRED_DECREMENT adicional si el sell_in es menor a 0
+        """
+        self._apply_standard_aging(
+            item,
+            self._decrease_quality_safe,
+            CONJURED_DAILY_DECREMENT,
+            CONJURED_EXPIRED_DECREMENT,
         )
 
     def _increase_backstage_passes(self, item: Item) -> None:
