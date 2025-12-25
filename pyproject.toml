@@ -19,6 +19,15 @@ dev = [
 [tool.ruff]
 line-length = 100
 target-version = "py310"
+exclude = [
+    "tests/approved_files/",
+    "*.txt",
+    "*.md",
+    "htmlcov/",
+    "__pycache__/",
+    ".venv/",
+    ".git/",
+]
 
 [tool.ruff.lint]
 select = [
@@ -34,6 +43,13 @@ ignore = []
 
 [tool.ruff.lint.per-file-ignores]
 "texttest_fixture.py" = ["F403", "F405"]  # Legacy code with star imports
+
+[tool.ruff.format]
+exclude = [
+    "tests/approved_files/",
+    "*.txt",
+    "*.md",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
