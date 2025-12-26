@@ -18,7 +18,7 @@ class TestQualityInvariants:
 
     @given(
         name=st.text(min_size=1, max_size=50),
-        sell_in=st.integers(min_value=100, max_value=100),
+        sell_in=st.integers(min_value=-100, max_value=100),
         quality=st.integers(min_value=0, max_value=50),
     )
     def test_quality_never_negative(self, name, sell_in, quality):
