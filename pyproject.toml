@@ -15,6 +15,7 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     "ruff>=0.1.0",
+    "mutmut >=2.0.0",
 ]
 
 [tool.ruff]
@@ -64,6 +65,12 @@ addopts = [
     "--cov-report=html",
 ]
 
+[tool.mutmut]
+paths_to_mutate = ["gilded_rose/"]
+backup = false
+runner = "python -m pytest tests/unit -x --ff -q"
+# tests_dir = "tests/"
+
 [tool.coverage.run]
 source = ["gilded_rose"]
 omit = [
@@ -79,6 +86,7 @@ exclude_lines = [
     "raise AssertionError",
     "raise NotImplementedError",
     "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
 ]
 
 [tool.pyright]

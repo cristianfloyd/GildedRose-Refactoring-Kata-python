@@ -30,6 +30,8 @@ env/
 .pytest_cache/
 .coverage
 htmlcov/
+mutants/
+.mutmutrc.bak
 coverage.xml
 *.cover
 .hypothesis/
