@@ -1,6 +1,12 @@
+import sys
+
 import pytest
 
 from gilded_rose import GildedRose, Item
+
+# Ensure project root is in path for mutmut isolation
+sys.path.append("/home/usuario/development/GildedRose-Python-Refactoring")
+
 
 # conftest.py
 
